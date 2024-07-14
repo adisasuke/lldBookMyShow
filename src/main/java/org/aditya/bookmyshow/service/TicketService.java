@@ -1,5 +1,7 @@
 package org.aditya.bookmyshow.service;
 
+import org.aditya.bookmyshow.Exception.ShowNotFoundException;
+import org.aditya.bookmyshow.Exception.UserNotFoundException;
 import org.aditya.bookmyshow.model.*;
 import org.aditya.bookmyshow.repository.SeatRepository;
 import org.aditya.bookmyshow.repository.ShowRepository;
@@ -17,47 +19,52 @@ public class TicketService {
 
     private UserRepository userRepository;
     private ShowRepository showRepository;
-    private SeatRepository seatRepository;;
     private ShowSeatRepository showSeatRepository;
 
-    public TicketService(UserRepository userRepository, ShowRepository showRepository, SeatRepository seatRepository, ShowSeatRepository showSeatRepository) {
+    public TicketService(UserRepository userRepository, ShowRepository showRepository, ShowSeatRepository showSeatRepository) {
         this.userRepository = userRepository;
         this.showRepository = showRepository;
-        this.seatRepository = seatRepository;
         this.showSeatRepository = showSeatRepository;
     }
 
 
-    public Booking issueTicket(Long userID, Long showID, List<Long> seatID){
+    public Booking issueTicket(Long userID, Long showID, List<Long> showSeatIDs) throws UserNotFoundException, ShowNotFoundException {
 
-        Optional<User> user = userRepository.findById(userID);
-        if(user.isEmpty())
+        Optional<User> userOptional = userRepository.findById(userID);
+        if(userOptional.isEmpty())
         {
-            return null;
-        }
-        Optional<Show> show = showRepository.findById(showID);
-        if(show.isEmpty())
-        {
-            return null;
-        }
-        Screen screen = show.get().getScreen();
-        LocalDateTime startTime = show.get().getStDateTime();
-        LocalDateTime endTime = show.get().getEdDateTime();
-
-        List<Seat> seats = seatRepository.findAllBy(seatID);
-        List<ShowSeat> showSeats = showSeatRepository.findAllByShowIdAndSeat(seats, show);
-
-        for(ShowSeat showSeat : showSeats)
-        {
-            if(showSeat.getSHOWSTATUS().equals(SHOWSTATUS.OCCUPIED) || showSeat.equals(SHOWSTATUS.PENDING))
-            {
-                return null;
-            }
-            else {
-
-            }
+            throw new UserNotFoundException();
         }
 
+
+        Optional<Show> showOptional = showRepository.findById(showID);
+        if(showOptional.isEmpty())
+        {
+            throw new ShowNotFoundException();
+        }
+        Show show = showOptional.get();
+
+
+
+        List<ShowSeat> showSeats = showSeatRepository.findAllById(showSeatIDs);
+
+//        for(ShowSeat showSeat : showSeats)
+//        {
+//            if(showSeat.getSHOWSTATUS().equals(SHOWSTATUS.OCCUPIED) || showSeat.equals(SHOWSTATUS.PENDING))
+//            {
+//                return null;
+//            }
+//            else {
+//
+//            }
+//        }
+
+
+
+//        List<Seat> seats = seatRepository.findAllBy(seatID);
+//        Screen screen = show.get().getScreen();
+//        LocalDateTime startTime = show.get().getStDateTime();
+//        LocalDateTime endTime = show.get().getEdDateTime();
         return null;
 
     }

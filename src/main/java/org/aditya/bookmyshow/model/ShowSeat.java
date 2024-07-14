@@ -19,7 +19,7 @@ public class ShowSeat extends BaseModel{
         Seat seat;
 
         @Enumerated(EnumType.ORDINAL)
-        ShowSeatStatus showSeatStatus;
+        ShowSeatStatus showSeatStatus   ;
 
 
         private Date blockedAt;

@@ -10,6 +10,6 @@ import java.util.List;
 public class RequestDto {
     Long userID;
     Long showID;
-    List<Long> seatID;
+    List<Long> showseatID;
 
 }

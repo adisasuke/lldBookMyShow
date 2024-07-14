@@ -22,9 +22,9 @@ public class TicketController {
 
         Long userID = requestDto.getUserID();
         Long showID = requestDto.getShowID();
-        List<Long> seatID = requestDto.getSeatID();
+        List<Long> showSeatIDs = requestDto.getShowseatID();
 
-        Booking booking = ticketService.issueTicket(userID, showID, seatID);
+        Booking booking = ticketService.issueTicket(userID, showID, showSeatIDs);
         ResponseDto responseDto = new ResponseDto();
         if(booking == null)
         {
