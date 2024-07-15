@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class Seat extends BaseModel{
     private String seatNumber;
-    int row;
-    int col;
+    int rowVal;
+    int colVal;
 
     @Enumerated(EnumType.ORDINAL)
     SEATTYPE seattype;

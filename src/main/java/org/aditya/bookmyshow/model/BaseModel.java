@@ -17,6 +17,8 @@ public class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+
     LocalDateTime generatedAt;
     LocalDateTime lastModifiedDate;
 }

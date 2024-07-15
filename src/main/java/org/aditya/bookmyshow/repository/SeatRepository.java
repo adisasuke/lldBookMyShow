@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
-    List<Seat> findAllBy(List<Long> seatID);
+    List<Seat> findAllByIdIn(List<Long> seatID);
 
 }

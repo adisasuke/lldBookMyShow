@@ -5,10 +5,7 @@ import org.aditya.bookmyshow.Exception.ShowNotFoundException;
 import org.aditya.bookmyshow.Exception.ShowSeatNotAvailableException;
 import org.aditya.bookmyshow.Exception.UserNotFoundException;
 import org.aditya.bookmyshow.model.*;
-import org.aditya.bookmyshow.repository.SeatRepository;
-import org.aditya.bookmyshow.repository.ShowRepository;
-import org.aditya.bookmyshow.repository.ShowSeatRepository;
-import org.aditya.bookmyshow.repository.UserRepository;
+import org.aditya.bookmyshow.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +22,15 @@ public class TicketService {
     private UserRepository userRepository;
     private ShowRepository showRepository;
     private ShowSeatRepository showSeatRepository;
+    private PriceService priceService;
+    private BookingRepository bookingRepository;
 
-    public TicketService(UserRepository userRepository, ShowRepository showRepository, ShowSeatRepository showSeatRepository) {
+    public TicketService(UserRepository userRepository, ShowRepository showRepository, ShowSeatRepository showSeatRepository,PriceService priceService, BookingRepository bookingRepository) {
         this.userRepository = userRepository;
         this.showRepository = showRepository;
         this.showSeatRepository = showSeatRepository;
+        this.priceService = priceService;
+        this.bookingRepository = bookingRepository;
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -51,7 +52,7 @@ public class TicketService {
 
 
 
-        List<ShowSeat> showSeats = showSeatRepository.findAllById(showSeatIDs);
+        List<ShowSeat> showSeats = showSeatRepository.findAllByIdIn(showSeatIDs);
 
         //check if available or blocked for more than 15 min
 
@@ -77,8 +78,8 @@ public class TicketService {
 
         Screen screen = show.getScreen();
 
-        int total_amout = 0;
-        //calculate this amount using price calculator service
+        Long total_amount;
+        total_amount = priceService.calculatePrice(showSeats, show);
         Booking booking = new Booking();
         booking.setUser(userOptional.get());
         booking.setShowSeats(showSeats);
@@ -86,9 +87,10 @@ public class TicketService {
         booking.setScreen(screen);
         booking.setBookedAt(currDate);
         booking.setBookingStatus(BOOKINGSTATUS.PENDING);
-        booking.setTotalAmount(total_amout);
+        booking.setTotalAmount(total_amount);
         //save booking in database before returning
 
+        bookingRepository.save(booking);
         return booking;
 
     }

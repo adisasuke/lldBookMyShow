@@ -32,6 +32,6 @@ public class Booking extends BaseModel{
 
     @OneToMany
     List<Payment> payments;
-    int totalAmount;
+    Long totalAmount;
 
 }
