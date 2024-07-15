@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,13 +19,13 @@ public class Booking extends BaseModel{
     Screen screen;
 
 
-    LocalDateTime bookedAt;
+    Date bookedAt;
 
     @ManyToOne
     User user;
 
     @ManyToMany
-    List<ShowSeat> seats;
+    List<ShowSeat> showSeats;
 
     @Enumerated(EnumType.ORDINAL)
     BOOKINGSTATUS bookingStatus;
