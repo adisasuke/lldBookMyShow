@@ -76,6 +76,13 @@ public class TicketService {
             }
         }
 
+        for(ShowSeat showSeat : showSeats)
+        {
+            showSeat.setShowSeatStatus(ShowSeatStatus.BLOCKED);
+            showSeat.setBlockedAt(new Date());
+            showSeatRepository.save(showSeat);
+        }
+
         Screen screen = show.getScreen();
 
         Long total_amount;
